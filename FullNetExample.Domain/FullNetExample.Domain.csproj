@@ -50,10 +50,6 @@
       <HintPath>..\packages\Microsoft.EntityFrameworkCore.1.1.1\lib\net451\Microsoft.EntityFrameworkCore.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Design, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Design.1.1.1\lib\net451\Microsoft.EntityFrameworkCore.Design.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.1.1.1\lib\net451\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
       <Private>True</Private>
@@ -149,6 +145,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quote.cs" />
     <Compile Include="Samurai.cs" />
+    <Compile Include="SamuraiBattle.cs" />
+    <Compile Include="SecretIdentity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

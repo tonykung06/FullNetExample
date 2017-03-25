@@ -8,9 +8,10 @@ using FullNetExample.Data;
 namespace FullNetExample.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20170325083232_JoinSamuraiBattle")]
+    partial class JoinSamuraiBattle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -73,23 +74,6 @@ namespace FullNetExample.Data.Migrations
                     b.ToTable("SamuraiBattle");
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.SecretIdentity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("RealName");
-
-                    b.Property<int>("SamuraiId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SamuraiId")
-                        .IsUnique();
-
-                    b.ToTable("SecretIdentity");
-                });
-
             modelBuilder.Entity("FullNetExample.Domain.Quote", b =>
                 {
                     b.HasOne("FullNetExample.Domain.Samurai", "Samurai")
@@ -108,14 +92,6 @@ namespace FullNetExample.Data.Migrations
                     b.HasOne("FullNetExample.Domain.Samurai", "Samurai")
                         .WithMany("SamuraiBattles")
                         .HasForeignKey("SamuraiId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("FullNetExample.Domain.SecretIdentity", b =>
-                {
-                    b.HasOne("FullNetExample.Domain.Samurai", "Smaurai")
-                        .WithOne("SecretIdentity")
-                        .HasForeignKey("FullNetExample.Domain.SecretIdentity", "SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

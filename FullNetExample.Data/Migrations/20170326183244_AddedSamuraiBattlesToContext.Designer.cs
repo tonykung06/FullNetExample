@@ -3,20 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using FullNetExample.Data;
+using SamuraiApp.Data;
 
-namespace FullNetExample.Data.Migrations
+namespace SamuraiApp.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20161123183244_AddedSamuraiBattlesToContext")]
+    partial class AddedSamuraiBattlesToContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.1")
+                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("FullNetExample.Domain.Battle", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.Battle", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -32,7 +33,7 @@ namespace FullNetExample.Data.Migrations
                     b.ToTable("Battles");
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.Quote", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.Quote", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -48,7 +49,7 @@ namespace FullNetExample.Data.Migrations
                     b.ToTable("Quotes");
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.Samurai", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.Samurai", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -60,20 +61,20 @@ namespace FullNetExample.Data.Migrations
                     b.ToTable("Samurais");
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.SamuraiBattle", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.SamuraiBattle", b =>
                 {
-                    b.Property<int>("SamuraiId");
-
                     b.Property<int>("BattleId");
 
-                    b.HasKey("SamuraiId", "BattleId");
+                    b.Property<int>("SamuraiId");
 
-                    b.HasIndex("BattleId");
+                    b.HasKey("BattleId", "SamuraiId");
 
-                    b.ToTable("SamuraiBattle");
+                    b.HasIndex("SamuraiId");
+
+                    b.ToTable("SamuraiBattles");
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.SecretIdentity", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.SecretIdentity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -90,32 +91,32 @@ namespace FullNetExample.Data.Migrations
                     b.ToTable("SecretIdentity");
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.Quote", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.Quote", b =>
                 {
-                    b.HasOne("FullNetExample.Domain.Samurai", "Samurai")
+                    b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
                         .WithMany("Quotes")
                         .HasForeignKey("SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.SamuraiBattle", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.SamuraiBattle", b =>
                 {
-                    b.HasOne("FullNetExample.Domain.Battle", "Battle")
+                    b.HasOne("SamuraiApp.Domain.Battle", "Battle")
                         .WithMany("SamuraiBattles")
                         .HasForeignKey("BattleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("FullNetExample.Domain.Samurai", "Samurai")
+                    b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
                         .WithMany("SamuraiBattles")
                         .HasForeignKey("SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("FullNetExample.Domain.SecretIdentity", b =>
+            modelBuilder.Entity("SamuraiApp.Domain.SecretIdentity", b =>
                 {
-                    b.HasOne("FullNetExample.Domain.Samurai", "Smaurai")
+                    b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
                         .WithOne("SecretIdentity")
-                        .HasForeignKey("FullNetExample.Domain.SecretIdentity", "SamuraiId")
+                        .HasForeignKey("SamuraiApp.Domain.SecretIdentity", "SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }
