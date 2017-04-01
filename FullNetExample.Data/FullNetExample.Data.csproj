@@ -165,6 +165,10 @@
     <Compile Include="Migrations\20170325084204_SecretIdentity.designer.cs">
       <DependentUpon>20170325084204_SecretIdentity.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20170401160506_storedProcs.cs" />
+    <Compile Include="Migrations\20170401160506_storedProcs.designer.cs">
+      <DependentUpon>20170401160506_storedProcs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\SamuraiContextModelSnapshot.cs" />
     <Compile Include="MyLoggerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -31,7 +31,9 @@ namespace SomeUI
             //DeleteWhileTracked();
             //DeleteMany();
             //DeleteWhileNotTracked();
-            RawSqlQuery();
+            //RawSqlQuery();
+            //RawSqlCommand();
+            RawSqlCommandWithOutput();
             Console.ReadLine();
         }
 
