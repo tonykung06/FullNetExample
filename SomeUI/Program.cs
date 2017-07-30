@@ -281,6 +281,158 @@ namespace SomeUI
             }
         }
 
+        private static void EagerLoadWithInclude()
+        {
+            _context = new SamuraiContext();
+            var samuraiWithQuotes = _context.Samurais.Include(
+                s => s.Quotes
+            ).ToList();
+        }
+
+        private static void EagerLoadManyToManyAkaChildrenGrandchildren()
+        {
+            _context = new SamuraiContext();
+            var samuraiWithBattles = _context.Samurais
+              .Include(s => s.SamuraiBattles)
+              .ThenInclude(sb => sb.Battle).ToList();
+        }
+
+        private static void EagerLoadFilteredManyToManyAkaChildrenGrandchildren()
+        {
+            _context = new SamuraiContext();
+            var samuraiWithBattles = _context.Samurais
+              .Include(s => s.SamuraiBattles)
+              .ThenInclude(sb => sb.Battle)
+              .Where(s => s.Name == "Kyūzō").ToList();
+        }
+
+        private static void EagerLoadWithMultipleBranches()
+        {
+            _context = new SamuraiContext();
+            var samurais = _context.Samurais
+              .Include(s => s.SecretIdentity)
+              .Include(s => s.Quotes).ToList();
+        }
+
+        private static void EagerLoadWithFromSql()
+        {
+            var samurais = _context.Samurais.FromSql("select * from samurais")
+              .Include(s => s.Quotes)
+              .ToList();
+        }
+
+        private static void EagerLoadWithFindNope()
+        {
+
+        }
+
+        private static void EagerLoadFilterChildrenNope()
+        { //this won't work. No filtering, no sorting on Include
+            _context = new SamuraiContext();
+            var samurais = _context.Samurais
+              .Include(s => s.Quotes.Where(q => q.Text.Contains("happy")))
+              .ToList();
+        }
+
+        private static void AnonymousTypeViaProjection()
+        {
+            _context = new SamuraiContext();
+            var quotes = _context.Quotes
+              .Select(q => new { q.Id, q.Text })
+              .ToList();
+        }
+
+        // has N+1 problem
+        private static void AnonymousTypeViaProjectionWithRelated()
+        {
+            _context = new SamuraiContext();
+            var samurais = _context.Samurais
+              .Select(s => new
+              {
+                  s.Id,
+                  s.SecretIdentity.RealName,
+                  QuoteCount = s.Quotes.Count
+              })
+              .ToList();
+        }
+
+        // after the find(1) call, the samurai of id 1 is tracked by entityframework
+        // when the quotes query is executed, it knows it is related to samurai of id 1,
+        // and fix up the navigation, so samurai.Quotes has length of 2
+        private static void RelatedObjectsFixUp()
+        {
+            _context = new SamuraiContext();
+            var samurai = _context.Samurais.Find(1);
+            var quotes = _context.Quotes.Where(q => q.SamuraiId == 1).ToList();
+        }
+
+        // N+1
+        private static void EagerLoadViaProjectionNotQuite()
+        {
+            _context = new SamuraiContext();
+            var samurais = _context.Samurais
+              .Select(s => new { Samurai = s, Quotes = s.Quotes })
+              .ToList();
+            //all results are in memory, but navigations are not fixed up
+            //watch this github issue:https://github.com/aspnet/EntityFramework/issues/7131
+        }
+
+        private static void EagerLoadViaProjectionAndScalars()
+        {
+            _context = new SamuraiContext();
+            var samurais = _context.Samurais
+              .Select(s => new { s.Id, Quotes = s.Quotes })
+              .ToList();
+        }
+
+        private static void FilteredEagerLoadViaProjectionNope()
+        {
+            _context = new SamuraiContext();
+            var samurais = _context.Samurais
+              .Select(s => new
+              {
+                  Samurai = s,
+                  Quotes = s.Quotes
+                          .Where(q => q.Text.Contains("happy"))
+                          .ToList()
+              })
+              .ToList();
+            //quotes are not even retrieved in query.
+            //https://github.com/aspnet/EntityFramework/issues/7131
+        }
+
+        private static void ExplicitLoad()
+        {
+            _context = new SamuraiContext();
+            var samurai = _context.Samurais.FirstOrDefault();
+            _context.Entry(samurai).Collection(s => s.Quotes).Load();
+            _context.Entry(samurai).Reference(s => s.SecretIdentity).Load();
+        }
+
+        private static void ExplicitLoadWithChildFilter()
+        {
+            _context = new SamuraiContext();
+            var samurai = _context.Samurais.FirstOrDefault();
+
+            // _context.Entry(samurai)
+            //   .Collection(s => s.Quotes.Where(q=>q.Text.Contains("happy"))).Load();
+
+            _context.Entry(samurai)
+              .Collection(s => s.Quotes)
+              .Query()
+              .Where(q => q.Text.Contains("happy"))
+              .Load();
+        }
+
+        // quotes are not returned, just for filtering
+        private static void UsingRelatedDataForFiltersAndMore()
+        {
+            _context = new SamuraiContext();
+            var samurais = _context.Samurais
+              .Where(s => s.Quotes.Any(q => q.Text.Contains("happy")))
+              .ToList();
+        }
+
         private static void InsertMultipleSamurais()
         {
             var samurais = new List<Samurai> {

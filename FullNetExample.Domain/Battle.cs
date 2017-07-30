@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FullNetExample.Domain
 {
-    public class Battle
+    public class Battle : ClientChangeTracker
     {
         public int Id { get; set; }
         public string Name { get; set; }
